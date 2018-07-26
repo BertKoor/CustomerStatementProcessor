@@ -15,10 +15,33 @@
     </properties>
 
     <dependencies>
+        <!-- Project Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.18</version>
+        </dependency>
+
+        <!-- javax.validation support -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.4.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>3.0.1-b09</version>
         </dependency>
 
         <!-- unit testing support -->
@@ -91,7 +114,7 @@
         </pluginManagement>
     </build>
 
-    <reporting>
+    <reporting>    <!-- run 'mvn clean package site' for the poor-man's SonarQube -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
