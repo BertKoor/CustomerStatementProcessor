@@ -43,6 +43,11 @@ public class CustomerStatementTest {
 
         Set<ConstraintViolation<CustomerStatement>> violations = validator.validate(sut);
         assertThat(violations.isEmpty()).isFalse();
+
+        ConstraintViolation cv = violations.iterator().next();
+        assertThat(cv.getPropertyPath().toString()).isEqualTo("referenceNumber");
+        assertThat(cv.getMessage()).isEqualTo("may not be empty");
+        System.out.println(cv.toString());
     }
 
     @Test
@@ -52,6 +57,10 @@ public class CustomerStatementTest {
 
         Set<ConstraintViolation<CustomerStatement>> violations = validator.validate(sut);
         assertThat(violations.isEmpty()).isFalse();
+
+        ConstraintViolation cv = violations.iterator().next();
+        assertThat(cv.getPropertyPath().toString()).isEqualTo("referenceNumber");
+        assertThat(cv.getMessage()).isEqualTo("may not be empty");
     }
 
     @Test
@@ -60,6 +69,10 @@ public class CustomerStatementTest {
 
         Set<ConstraintViolation<CustomerStatement>> violations = validator.validate(sut);
         assertThat(violations.isEmpty()).isFalse();
+
+        ConstraintViolation cv = violations.iterator().next();
+        assertThat(cv.getPropertyPath().toString()).isEqualTo("referenceNumber");
+        assertThat(cv.getMessage()).isEqualTo("may not be null");
     }
 
 }
