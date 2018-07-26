@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CustomerStatementTest {
 
     private static final Validator validator = buildDefaultValidatorFactory().getValidator();
+    private static final BigDecimal ELEVEN = TEN.add(ONE);
 
     @Test
     public void equalsVerifierTest() {
@@ -36,9 +39,9 @@ public class CustomerStatementTest {
                         .referenceNumber(null) // <-- FAILS
                         .accountNumber("1") //
                         .description("foobar") //
-                        .startBalance(BigDecimal.TEN) //
-                        .mutation(BigDecimal.ONE) //
-                        .endBalance(BigDecimal.TEN) //
+                        .startBalance(TEN) //
+                        .mutation(ONE) //
+                        .endBalance(ELEVEN) //
                         .build(), //
                 "referenceNumber may not be empty");
     }
@@ -49,9 +52,9 @@ public class CustomerStatementTest {
                 .referenceNumber("1") // <-- OK
                 .accountNumber("1") //
                 .description("foobar") //
-                .startBalance(BigDecimal.TEN) //
-                .mutation(BigDecimal.ONE) //
-                .endBalance(BigDecimal.TEN) //
+                .startBalance(TEN) //
+                .mutation(ONE) //
+                .endBalance(ELEVEN) //
                 .build());
     }
 
@@ -61,9 +64,9 @@ public class CustomerStatementTest {
                         .referenceNumber("") // <-- FAILS
                         .accountNumber("1") //
                         .description("foobar") //
-                        .startBalance(BigDecimal.TEN) //
-                        .mutation(BigDecimal.ONE) //
-                        .endBalance(BigDecimal.TEN) //
+                        .startBalance(TEN) //
+                        .mutation(ONE) //
+                        .endBalance(ELEVEN) //
                         .build(), //
                 "referenceNumber may not be empty");
     }
@@ -74,9 +77,9 @@ public class CustomerStatementTest {
                         .referenceNumber(" ") // <-- FAILS
                         .accountNumber("1") //
                         .description("foobar") //
-                        .startBalance(BigDecimal.TEN) //
-                        .mutation(BigDecimal.ONE) //
-                        .endBalance(BigDecimal.TEN) //
+                        .startBalance(TEN) //
+                        .mutation(ONE) //
+                        .endBalance(ELEVEN) //
                         .build(), //
                 "referenceNumber may not be empty");
     }
@@ -88,9 +91,9 @@ public class CustomerStatementTest {
                         .referenceNumber("1") //
                         .accountNumber(null) // <-- FAILS
                         .description("foobar") //
-                        .startBalance(BigDecimal.TEN) //
-                        .mutation(BigDecimal.ONE) //
-                        .endBalance(BigDecimal.TEN) //
+                        .startBalance(TEN) //
+                        .mutation(ONE) //
+                        .endBalance(ELEVEN) //
                         .build(), //
                 "accountNumber may not be empty");
     }
@@ -101,9 +104,9 @@ public class CustomerStatementTest {
                         .referenceNumber("1") //
                         .accountNumber("foobar") //
                         .description(null) // <-- FAILS
-                        .startBalance(BigDecimal.TEN) //
-                        .mutation(BigDecimal.ONE) //
-                        .endBalance(BigDecimal.TEN) //
+                        .startBalance(TEN) //
+                        .mutation(ONE) //
+                        .endBalance(ELEVEN) //
                         .build(), //
                 "description may not be empty");
     }
@@ -116,8 +119,8 @@ public class CustomerStatementTest {
                         .accountNumber("1") //
                         .description("foobar") //
                         .startBalance(null) // <-- FAILS
-                        .mutation(BigDecimal.ONE) //
-                        .endBalance(BigDecimal.TEN) //
+                        .mutation(ONE) //
+                        .endBalance(ELEVEN) //
                         .build(), //
                 "startBalance may not be null");
     }
@@ -128,9 +131,9 @@ public class CustomerStatementTest {
                         .referenceNumber("1") //
                         .accountNumber("1") //
                         .description("foobar") //
-                        .startBalance(BigDecimal.TEN) //
+                        .startBalance(TEN) //
                         .mutation(null) // <-- FAILS
-                        .endBalance(BigDecimal.TEN) //
+                        .endBalance(ELEVEN) //
                         .build(), //
                 "mutation may not be null");
     }
@@ -141,11 +144,24 @@ public class CustomerStatementTest {
                         .referenceNumber("1") //
                         .accountNumber("1") //
                         .description("foobar") //
-                        .startBalance(BigDecimal.TEN) //
-                        .mutation(BigDecimal.ONE) //
+                        .startBalance(TEN) //
+                        .mutation(ONE) //
                         .endBalance(null) // <-- FAILS
                         .build(), //
                 "endBalance may not be null");
+    }
+
+    @Test
+    public void whenItDoesntAddUp_thenNotValid() {
+        assertValidity(CustomerStatement.builder()
+                        .referenceNumber("1") //
+                        .accountNumber("1") //
+                        .description("foobar") //
+                        .startBalance(TEN) //
+                        .mutation(ONE) //
+                        .endBalance(TEN) // <-- FAILS
+                        .build(), //
+                "endBalance expected to be 11.00");
     }
 
     private void assertValidity(final CustomerStatement sut, final String... expectedMessage) {

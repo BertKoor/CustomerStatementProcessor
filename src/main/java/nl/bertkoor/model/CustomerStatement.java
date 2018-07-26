@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter @Builder @EqualsAndHashCode
+@BalanceConstraint
 public final class CustomerStatement {
 
     @NotBlank private final String referenceNumber;
