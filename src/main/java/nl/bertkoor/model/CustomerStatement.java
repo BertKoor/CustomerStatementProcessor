@@ -14,7 +14,7 @@ public final class CustomerStatement {
     @NotBlank private final String referenceNumber;
     @NotBlank private final String accountNumber;
     @NotBlank private final String description;
-    private final BigDecimal startBalance;
-    private final BigDecimal mutation;
-    private final BigDecimal endBalance;
+    @NotNull private final BigDecimal startBalance;
+    @NotNull private final BigDecimal mutation;
+    @NotNull private final BigDecimal endBalance;
 }

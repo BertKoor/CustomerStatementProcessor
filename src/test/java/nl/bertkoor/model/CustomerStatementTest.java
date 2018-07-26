@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,41 +32,52 @@ public class CustomerStatementTest {
     // Extensive tests on @NotBlank annotation on one field: referenceNumber
     @Test
     public void whenReferenceIsNull_thenNotValid() {
-        assertValidity(CustomerStatement.builder()
-                .referenceNumber(null)
-                .accountNumber("1") //
-                .description("foobar") //
-                .build(), //
+        assertValidity(CustomerStatement.builder() //
+                        .referenceNumber(null) // <-- FAILS
+                        .accountNumber("1") //
+                        .description("foobar") //
+                        .startBalance(BigDecimal.TEN) //
+                        .mutation(BigDecimal.ONE) //
+                        .endBalance(BigDecimal.TEN) //
+                        .build(), //
                 "referenceNumber may not be empty");
     }
-
 
     @Test
     public void whenReferenceIsFilled_thenIsValid() {
         assertValidity(CustomerStatement.builder() //
-                .referenceNumber("1") //
+                .referenceNumber("1") // <-- OK
                 .accountNumber("1") //
                 .description("foobar") //
+                .startBalance(BigDecimal.TEN) //
+                .mutation(BigDecimal.ONE) //
+                .endBalance(BigDecimal.TEN) //
                 .build());
     }
 
     @Test
     public void whenReferenceIsEmpty_thenNotValid() {
         assertValidity(CustomerStatement.builder() //
-                .referenceNumber("") //
-                .accountNumber("1") //
-                .description("foobar") //
-                .build(), //
+                        .referenceNumber("") // <-- FAILS
+                        .accountNumber("1") //
+                        .description("foobar") //
+                        .startBalance(BigDecimal.TEN) //
+                        .mutation(BigDecimal.ONE) //
+                        .endBalance(BigDecimal.TEN) //
+                        .build(), //
                 "referenceNumber may not be empty");
     }
 
     @Test
     public void whenReferenceIsBlank_thenNotValid() {
         assertValidity(CustomerStatement.builder()
-                .referenceNumber(" ")
-                .accountNumber("1") //
-                .description("foobar") //
-                .build(), //
+                        .referenceNumber(" ") // <-- FAILS
+                        .accountNumber("1") //
+                        .description("foobar") //
+                        .startBalance(BigDecimal.TEN) //
+                        .mutation(BigDecimal.ONE) //
+                        .endBalance(BigDecimal.TEN) //
+                        .build(), //
                 "referenceNumber may not be empty");
     }
 
@@ -73,27 +85,73 @@ public class CustomerStatementTest {
     @Test
     public void whenAccountIsNull_thenNotValid() {
         assertValidity(CustomerStatement.builder()
-                .referenceNumber("1") //
-                .accountNumber(null) //
-                .description("foobar") //
-                .build(), //
+                        .referenceNumber("1") //
+                        .accountNumber(null) // <-- FAILS
+                        .description("foobar") //
+                        .startBalance(BigDecimal.TEN) //
+                        .mutation(BigDecimal.ONE) //
+                        .endBalance(BigDecimal.TEN) //
+                        .build(), //
                 "accountNumber may not be empty");
     }
 
     @Test
     public void whenDescriptionIsNull_thenNotValid() {
         assertValidity(CustomerStatement.builder()
-                .referenceNumber("1") //
-                .accountNumber("foobar") //
-                .description(null) //
-                .build(), //
+                        .referenceNumber("1") //
+                        .accountNumber("foobar") //
+                        .description(null) // <-- FAILS
+                        .startBalance(BigDecimal.TEN) //
+                        .mutation(BigDecimal.ONE) //
+                        .endBalance(BigDecimal.TEN) //
+                        .build(), //
                 "description may not be empty");
+    }
+
+    // Basic test on the BigDecimal fields
+    @Test
+    public void whenStartBalanceIsNull_thenNotValid() {
+        assertValidity(CustomerStatement.builder()
+                        .referenceNumber("1") //
+                        .accountNumber("1") //
+                        .description("foobar") //
+                        .startBalance(null) // <-- FAILS
+                        .mutation(BigDecimal.ONE) //
+                        .endBalance(BigDecimal.TEN) //
+                        .build(), //
+                "startBalance may not be null");
+    }
+
+    @Test
+    public void whenMutationIsNull_thenNotValid() {
+        assertValidity(CustomerStatement.builder()
+                        .referenceNumber("1") //
+                        .accountNumber("1") //
+                        .description("foobar") //
+                        .startBalance(BigDecimal.TEN) //
+                        .mutation(null) // <-- FAILS
+                        .endBalance(BigDecimal.TEN) //
+                        .build(), //
+                "mutation may not be null");
+    }
+
+    @Test
+    public void whenEndBalanceIsNull_thenNotValid() {
+        assertValidity(CustomerStatement.builder()
+                        .referenceNumber("1") //
+                        .accountNumber("1") //
+                        .description("foobar") //
+                        .startBalance(BigDecimal.TEN) //
+                        .mutation(BigDecimal.ONE) //
+                        .endBalance(null) // <-- FAILS
+                        .build(), //
+                "endBalance may not be null");
     }
 
     private void assertValidity(final CustomerStatement sut, final String... expectedMessage) {
         Set<ConstraintViolation<CustomerStatement>> violations = validator.validate(sut);
         List<String> msgList = new ArrayList<>();
-        for (ConstraintViolation cv: violations) {
+        for (ConstraintViolation cv : violations) {
             msgList.add(cv.getPropertyPath() + " " + cv.getMessage());
         }
 
