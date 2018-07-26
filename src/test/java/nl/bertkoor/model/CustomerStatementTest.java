@@ -46,12 +46,12 @@ public class CustomerStatementTest {
     }
 
     @Test
-    public void whenReferenceIsBlank_thenIsValid() {
+    public void whenReferenceIsBlank_thenNotValid() {
         CustomerStatement sut = new CustomerStatement();
         sut.setReferenceNumber(" ");
 
         Set<ConstraintViolation<CustomerStatement>> violations = validator.validate(sut);
-        assertThat(violations.isEmpty()).isTrue();
+        assertThat(violations.isEmpty()).isFalse();
     }
 
     @Test
