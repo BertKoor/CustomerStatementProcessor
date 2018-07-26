@@ -1,7 +1,6 @@
 package nl.bertkoor.model;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
@@ -29,27 +28,66 @@ public class CustomerStatementTest {
                 .verify();
     }
 
+    // Extensive tests on @NotBlank annotation on one field: referenceNumber
+    @Test
+    public void whenReferenceIsNull_thenNotValid() {
+        assertValidity(CustomerStatement.builder()
+                .referenceNumber(null)
+                .accountNumber("1") //
+                .description("foobar") //
+                .build(), //
+                "referenceNumber may not be empty");
+    }
+
+
     @Test
     public void whenReferenceIsFilled_thenIsValid() {
-        assertValidity(CustomerStatement.builder().referenceNumber("1").build());
+        assertValidity(CustomerStatement.builder() //
+                .referenceNumber("1") //
+                .accountNumber("1") //
+                .description("foobar") //
+                .build());
     }
 
     @Test
     public void whenReferenceIsEmpty_thenNotValid() {
-        assertValidity(CustomerStatement.builder().referenceNumber("").build(), //
+        assertValidity(CustomerStatement.builder() //
+                .referenceNumber("") //
+                .accountNumber("1") //
+                .description("foobar") //
+                .build(), //
                 "referenceNumber may not be empty");
     }
 
     @Test
     public void whenReferenceIsBlank_thenNotValid() {
-        assertValidity(CustomerStatement.builder().referenceNumber(" ").build(), //
+        assertValidity(CustomerStatement.builder()
+                .referenceNumber(" ")
+                .accountNumber("1") //
+                .description("foobar") //
+                .build(), //
                 "referenceNumber may not be empty");
     }
 
+    // Basic test on other fields with @NotBlank annotation
     @Test
-    public void whenReferenceIsNull_thenNotValid() {
-        assertValidity(CustomerStatement.builder().build(), //
-                "referenceNumber may not be null", "referenceNumber may not be empty");
+    public void whenAccountIsNull_thenNotValid() {
+        assertValidity(CustomerStatement.builder()
+                .referenceNumber("1") //
+                .accountNumber(null) //
+                .description("foobar") //
+                .build(), //
+                "accountNumber may not be empty");
+    }
+
+    @Test
+    public void whenDescriptionIsNull_thenNotValid() {
+        assertValidity(CustomerStatement.builder()
+                .referenceNumber("1") //
+                .accountNumber("foobar") //
+                .description(null) //
+                .build(), //
+                "description may not be empty");
     }
 
     private void assertValidity(final CustomerStatement sut, final String... expectedMessage) {
