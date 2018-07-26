@@ -26,35 +26,30 @@ public class CustomerStatementTest {
     public void equalsVerifierTest() {
         EqualsVerifier
                 .forClass(CustomerStatement.class)
-                .suppress(Warning.NONFINAL_FIELDS)
                 .verify();
     }
 
     @Test
     public void whenReferenceIsFilled_thenIsValid() {
-        CustomerStatement sut = new CustomerStatement();
-        sut.setReferenceNumber("1");
-        assertValidity(sut);
+        assertValidity(CustomerStatement.builder().referenceNumber("1").build());
     }
 
     @Test
     public void whenReferenceIsEmpty_thenNotValid() {
-        CustomerStatement sut = new CustomerStatement();
-        sut.setReferenceNumber("");
-        assertValidity(sut, "referenceNumber may not be empty");
+        assertValidity(CustomerStatement.builder().referenceNumber("").build(), //
+                "referenceNumber may not be empty");
     }
 
     @Test
     public void whenReferenceIsBlank_thenNotValid() {
-        CustomerStatement sut = new CustomerStatement();
-        sut.setReferenceNumber(" ");
-        assertValidity(sut, "referenceNumber may not be empty");
+        assertValidity(CustomerStatement.builder().referenceNumber(" ").build(), //
+                "referenceNumber may not be empty");
     }
 
     @Test
     public void whenReferenceIsNull_thenNotValid() {
-        CustomerStatement sut = new CustomerStatement();
-        assertValidity(sut,"referenceNumber may not be null", "referenceNumber may not be empty");
+        assertValidity(CustomerStatement.builder().build(), //
+                "referenceNumber may not be null", "referenceNumber may not be empty");
     }
 
     private void assertValidity(final CustomerStatement sut, final String... expectedMessage) {
