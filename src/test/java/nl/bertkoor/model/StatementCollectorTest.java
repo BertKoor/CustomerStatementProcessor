@@ -2,10 +2,22 @@ package nl.bertkoor.model;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StatementCollectorTest {
+
+    private static final Validator VALIDATOR = buildDefaultValidatorFactory().getValidator();
 
     private StatementCollector sut;
 
@@ -17,19 +29,24 @@ public class StatementCollectorTest {
     @Test
     public void assertThatUniqueReferenceNumbersAreAdded() {
         assertThat(sut.countStatements()).isEqualTo(0);
+        assertValidity(sut);
 
         sut.prepareForStatement(CustomerStatement.builder().referenceNumber("1").build());
         assertThat(sut.countStatements()).isEqualTo(0);
+        assertValidity(sut);
 
         sut.process();
         assertThat(sut.countStatements()).isEqualTo(1);
+        assertValidity(sut);
 
         sut.prepareForStatement(CustomerStatement.builder().referenceNumber("2").build());
         sut.process();
         assertThat(sut.countStatements()).isEqualTo(2);
+        assertValidity(sut);
 
-        // add "2" again, count should remain 2
+        // add "2" again, should not be valid and count should remain 2
         sut.prepareForStatement(CustomerStatement.builder().referenceNumber("2").build());
+        assertValidity(sut, "referenceNumber already processed");
         sut.process();
         assertThat(sut.countStatements()).isEqualTo(2);
     }
@@ -54,5 +71,20 @@ public class StatementCollectorTest {
             assertThat(e.getMessage()).isEqualTo("newStatement is not null, first call process()");
         }
     }
+
+    private void assertValidity(final StatementCollector sut, final String... expectedMessage) {
+        Set<ConstraintViolation<StatementCollector>> violations = VALIDATOR.validate(sut);
+        List<String> msgList = new ArrayList<>();
+        for (ConstraintViolation cv : violations) {
+            msgList.add(cv.getPropertyPath() + " " + cv.getMessage());
+        }
+
+        if (expectedMessage.length == 0) {
+            assertThat(msgList).isEqualTo(Collections.EMPTY_LIST);
+        } else {
+            assertThat(msgList).contains(expectedMessage);
+        }
+    }
+
 
 }
