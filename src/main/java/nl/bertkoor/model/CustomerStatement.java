@@ -8,9 +8,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-@Getter @Builder @EqualsAndHashCode
-@BalanceConstraint
-public final class CustomerStatement {
+@Builder @Getter @EqualsAndHashCode
+public final class CustomerStatement implements BalancedStatement {
 
     @NotBlank private final String referenceNumber;
     @NotBlank private final String accountNumber;

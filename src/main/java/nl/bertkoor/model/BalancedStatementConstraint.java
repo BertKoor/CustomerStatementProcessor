@@ -7,10 +7,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = BalanceValidator.class)
+@Constraint(validatedBy = BalancedStatementValidator.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BalanceConstraint {
+public @interface BalancedStatementConstraint {
     String message() default "It doesn't add up";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };

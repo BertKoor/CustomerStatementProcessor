@@ -3,27 +3,14 @@ package nl.bertkoor.model;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
-import static javax.validation.Validation.buildDefaultValidatorFactory;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the CustomerStatement.
  * Could include MeanBean also, but EqualsVerifier provides enough coverage already.
  */
-public class CustomerStatementTest {
-
-    private static final Validator validator = buildDefaultValidatorFactory().getValidator();
-    private static final BigDecimal ELEVEN = TEN.add(ONE);
+public class CustomerStatementTest extends AbstractStatementTest {
 
     @Test
     public void equalsVerifierTest() {
@@ -151,30 +138,4 @@ public class CustomerStatementTest {
                 "endBalance may not be null");
     }
 
-    @Test
-    public void whenItDoesntAddUp_thenNotValid() {
-        assertValidity(CustomerStatement.builder()
-                        .referenceNumber("1") //
-                        .accountNumber("1") //
-                        .description("foobar") //
-                        .startBalance(TEN) //
-                        .mutation(ONE) //
-                        .endBalance(TEN) // <-- FAILS
-                        .build(), //
-                "endBalance expected to be 11.00");
-    }
-
-    private void assertValidity(final CustomerStatement sut, final String... expectedMessage) {
-        Set<ConstraintViolation<CustomerStatement>> violations = validator.validate(sut);
-        List<String> msgList = new ArrayList<>();
-        for (ConstraintViolation cv : violations) {
-            msgList.add(cv.getPropertyPath() + " " + cv.getMessage());
-        }
-
-        if (expectedMessage.length == 0) {
-            assertThat(msgList).isEqualTo(Collections.EMPTY_LIST);
-        } else {
-            assertThat(msgList).contains(expectedMessage);
-        }
-    }
 }
