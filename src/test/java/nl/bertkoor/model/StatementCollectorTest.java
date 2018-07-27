@@ -6,6 +6,7 @@ import org.junit.Test;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,7 @@ public class StatementCollectorTest {
         assertThat(sut.countStatements()).isEqualTo(0);
         assertValidity(sut);
 
-        sut.prepareForStatement(CustomerStatement.builder().referenceNumber("1").build());
+        sut.prepareForStatement(this.buildValidStatement("1"));
         assertThat(sut.countStatements()).isEqualTo(0);
         assertValidity(sut);
 
@@ -39,13 +40,13 @@ public class StatementCollectorTest {
         assertThat(sut.countStatements()).isEqualTo(1);
         assertValidity(sut);
 
-        sut.prepareForStatement(CustomerStatement.builder().referenceNumber("2").build());
+        sut.prepareForStatement(this.buildValidStatement("2"));
         sut.process();
         assertThat(sut.countStatements()).isEqualTo(2);
         assertValidity(sut);
 
         // add "2" again, should not be valid and count should remain 2
-        sut.prepareForStatement(CustomerStatement.builder().referenceNumber("2").build());
+        sut.prepareForStatement(this.buildValidStatement("2"));
         assertValidity(sut, "referenceNumber already processed");
         sut.process();
         assertThat(sut.countStatements()).isEqualTo(2);
@@ -70,6 +71,23 @@ public class StatementCollectorTest {
         } catch (IllegalArgumentException e) {
             assertThat(e.getMessage()).isEqualTo("newStatement is not null, first call process()");
         }
+    }
+
+    @Test
+    public void assertThatInvalidStatementsAreRecursivelyValidated() {
+        sut.prepareForStatement(this.buildValidStatement(""));
+        assertValidity(sut, "newStatement.referenceNumber may not be empty");
+    }
+
+    private CustomerStatement buildValidStatement(String refNr) {
+        return CustomerStatement.builder()
+                .referenceNumber(refNr)
+                .accountNumber("foo")
+                .description("bar")
+                .startBalance(BigDecimal.ZERO)
+                .mutation(BigDecimal.ONE)
+                .endBalance(BigDecimal.ONE)
+                .build();
     }
 
     private void assertValidity(final StatementCollector sut, final String... expectedMessage) {

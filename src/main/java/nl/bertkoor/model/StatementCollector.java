@@ -1,12 +1,22 @@
 package nl.bertkoor.model;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This StatementCollector should be used as follows:
+ * 1. call prepareForStatement(CustomerStatement)
+ * 2. use bean validation to validate it's state
+ * 3. call process()
+ * Perform this in iteration.
+ */
 @StatementCollectorConstraint
 public class StatementCollector {
 
     private Set<String> referenceNumbers = new HashSet<>();
+
+    @Valid
     private CustomerStatement newStatement = null;
 
     protected boolean hasNewStatement() {
