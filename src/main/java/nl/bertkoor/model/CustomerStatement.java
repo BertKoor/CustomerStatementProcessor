@@ -3,12 +3,13 @@ package nl.bertkoor.model;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-@Builder @Getter @EqualsAndHashCode
+@Builder @Getter @EqualsAndHashCode @ToString
 public final class CustomerStatement implements BalancedStatement {
 
     @NotBlank private final String referenceNumber;
