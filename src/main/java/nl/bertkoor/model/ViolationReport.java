@@ -28,8 +28,8 @@ public class ViolationReport {
             statement = ((StatementCollector)leafBean).currentStatement();
         }
 
-        return statement.getReferenceNumber() + "\\t" + //
-                statement.getDescription() + "\\t" + //
+        return statement.getReferenceNumber() + "\t" + //
+                statement.getDescription() + "\t" + //
                 violation.getPropertyPath().toString()
                         .replace("newStatement.", "") + " " + //
                 violation.getMessage();
