@@ -23,6 +23,10 @@ public class StatementCollector {
         return this.newStatement != null;
     }
 
+    protected CustomerStatement currentStatement() {
+        return this.newStatement;
+    }
+
     public synchronized void prepareForStatement(final CustomerStatement statement) {
         if (this.hasNewStatement()) {
             throw new IllegalArgumentException("newStatement is not null, first call process()");
