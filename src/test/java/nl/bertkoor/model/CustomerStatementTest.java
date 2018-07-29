@@ -1,5 +1,6 @@
 package nl.bertkoor.model;
 
+import nl.bertkoor.model.validation.AbstractStatementTest;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 

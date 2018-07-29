@@ -1,4 +1,4 @@
-package nl.bertkoor.model;
+package nl.bertkoor.model.validation;
 
 import java.math.BigDecimal;
 

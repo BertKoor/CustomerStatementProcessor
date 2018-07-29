@@ -3,7 +3,7 @@
 > Version 1.1, December 2016
 
 Everyone is permitted to copy and distribute verbatim or modified
-copies of this license document.
+copies of [this license document](https://dbad-license.org).
 
 > DON'T BE A DICK PUBLIC LICENSE
 

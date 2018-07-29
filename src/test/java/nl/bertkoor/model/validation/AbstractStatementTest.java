@@ -1,4 +1,4 @@
-package nl.bertkoor.model;
+package nl.bertkoor.model.validation;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractStatementTest {
 
-    static final BigDecimal ELEVEN = BigDecimal.TEN.add(BigDecimal.ONE);
+    public static final BigDecimal ELEVEN = BigDecimal.TEN.add(BigDecimal.ONE);
 
     private static final Validator VALIDATOR = buildDefaultValidatorFactory().getValidator();
 
