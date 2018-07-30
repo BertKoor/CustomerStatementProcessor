@@ -5,10 +5,10 @@ import nl.bertkoor.model.CustomerStatement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @SuppressFBWarnings(value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"})
 public final class CsvFileProcessor {
@@ -23,10 +23,9 @@ public final class CsvFileProcessor {
         this.reportWriter = new ReportWriter(printStream);
     }
 
-    public void processFile(final Path filePath) {
-        this.reportWriter.startReport(filePath.getFileName().toString());
-        try (BufferedReader reader = Files.newBufferedReader(filePath,
-                StandardCharsets.ISO_8859_1)) {
+    public void process(final String fileName, final InputStream stream) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(stream, StandardCharsets.ISO_8859_1))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 this.processRecord(line);

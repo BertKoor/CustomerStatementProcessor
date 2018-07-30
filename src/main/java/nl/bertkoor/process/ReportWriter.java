@@ -18,10 +18,6 @@ public final class ReportWriter {
         this.outputStream = printStream;
     }
 
-    public void startReport(final String fileName) {
-        printLine("Processing " + fileName);
-    }
-
     public void printViolations(final Collection<StatementError> violations) {
         if (!violations.isEmpty()) {
             this.printHeader();

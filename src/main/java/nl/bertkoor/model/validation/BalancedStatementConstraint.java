@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BalancedStatementConstraint {
-    String message() default "It doesn't add up";
+    String message() default "will be overwritten";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }

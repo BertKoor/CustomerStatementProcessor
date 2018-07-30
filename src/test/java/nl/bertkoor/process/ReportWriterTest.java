@@ -21,12 +21,6 @@ public class ReportWriterTest extends TestWithPrintStreamInterception {
     }
 
     @Test
-    public void assertThatFilenameIsWritten() {
-        sut.startReport("/foo.bar");
-        assertIsWritten("Processing /foo.bar");
-    }
-
-    @Test
     public void assertThatHeaderIsWritten() {
         sut.printViolations(buildErrors("Computer says no"));
         assertIsWritten("RefNr.   Statement Description");
