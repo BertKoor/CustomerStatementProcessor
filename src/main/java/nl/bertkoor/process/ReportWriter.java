@@ -36,8 +36,8 @@ public class ReportWriter {
                     "Statement Description",
                     "Violation"));
             printLine(renderLine("------",
-                    "----------------------------",
-                    "--------------------"));
+                    "------------------------------",
+                    "------------------------------"));
             headerPrinted = true;
         }
     }
@@ -59,7 +59,7 @@ public class ReportWriter {
 
     protected static String renderLine(final String refNr, final String statementDescr, final String validationError) {
         return align(refNr, 6) + "   " +
-                align(statementDescr, 35) + "   " +
+                align(statementDescr, 30) + "   " +
                 validationError;
     }
 

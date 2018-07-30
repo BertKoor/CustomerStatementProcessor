@@ -1,10 +1,7 @@
 package nl.bertkoor.process;
 
 import nl.bertkoor.model.CustomerStatement;
-import nl.bertkoor.model.StatementCollector;
-import nl.bertkoor.model.ViolationReport;
 
-import javax.validation.Validator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -12,17 +9,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static javax.validation.Validation.buildDefaultValidatorFactory;
-
 public class CsvFileProcessor {
 
     private ReportWriter reportWriter;
 
-    private CsvLineParser parser = new CsvLineParser();
-    private StatementCollector collector = new StatementCollector();
-    private Validator validator = buildDefaultValidatorFactory().getValidator();
-    private ViolationReport violations = new ViolationReport();
     private int recordCount = 0;
+    private CsvLineParser parser = new CsvLineParser();
+    private StatementValidator validator = new StatementValidator();
 
     public CsvFileProcessor(final PrintStream printStream) {
         this.reportWriter = new ReportWriter(printStream);
@@ -33,10 +26,7 @@ public class CsvFileProcessor {
         try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.ISO_8859_1)) {
             String line = null;
             while ((line = reader.readLine()) != null) {
-                CustomerStatement statement = this.parser.parse(line);
-                if (statement != null) {
-                    this.process(statement);
-                }
+                this.processRecord(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -45,11 +35,13 @@ public class CsvFileProcessor {
         }
     }
 
-    protected void process(final CustomerStatement statement) {
+    protected void processRecord(final String recordLine) {
         this.recordCount++;
-        collector.prepareForStatement(statement);
-        violations.add(validator.validate(collector));
-        collector.process();
+        CustomerStatement statement = this.parser.parse(recordLine);
+        if (statement != null) {
+            this.reportWriter.reportStatementViolations(this.validator.validate(statement));
+        }
+
     }
 
 }
