@@ -67,7 +67,10 @@ public final class ReportWriter {
                 + validationError;
     }
 
-    protected static String align(final String value, final int length) {
+    protected static String align(String value, final int length) {
+        if (value == null) {
+            value = "[null]";
+        }
         StringBuffer result = new StringBuffer();
         int copyLen = value.length() < length ? value.length() : length;
         result.append(value.substring(0, copyLen));

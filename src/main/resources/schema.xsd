@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="records">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="record" type="CustomerStatementType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="CustomerStatementType" mixed="true">
+        <xs:sequence>
+            <xs:element name="accountNumber" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="startBalance" type="AmountType"/>
+            <xs:element name="mutation" type="AmountType"/>
+            <xs:element name="endBalance" type="AmountType"/>
+        </xs:sequence>
+        <xs:attribute name="reference" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="AmountType">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

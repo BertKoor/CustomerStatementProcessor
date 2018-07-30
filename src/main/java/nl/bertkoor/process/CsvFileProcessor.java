@@ -11,40 +11,30 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
 @SuppressFBWarnings(value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"})
-public final class CsvFileProcessor {
+public final class CsvFileProcessor extends FileProcessor {
 
-    private ReportWriter reportWriter;
-
-    private int recordCount = 0;
     private CsvLineParser parser = new CsvLineParser();
-    private StatementValidator validator = new StatementValidator();
 
     public CsvFileProcessor(final PrintStream printStream) {
-        this.reportWriter = new ReportWriter(printStream);
+        super(printStream);
     }
 
-    public void process(final String fileName, final InputStream stream) {
+    public void process(final InputStream stream) {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(stream, StandardCharsets.ISO_8859_1))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
-                this.processRecord(line);
+                this.processStatement(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            this.reportWriter.endReport(this.recordCount);
+            this.endReport();
         }
     }
 
-    protected void processRecord(final String recordLine) {
-        CustomerStatement statement = this.parser.parse(recordLine);
-        if (statement != null) {
-            this.recordCount++;
-            this.reportWriter.printViolations(
-                    this.validator.validate(statement));
-        }
-
+    @Override
+    protected CustomerStatement parseStatement(final Object value) {
+        return parser.parse((String)value);
     }
-
 }

@@ -2,6 +2,8 @@ package nl.bertkoor;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.bertkoor.process.CsvFileProcessor;
+import nl.bertkoor.process.FileProcessor;
+import nl.bertkoor.process.XmlFileProcessor;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -12,7 +14,8 @@ public final class App {
     private PrintStream printStream = System.out;
 
     public static void main(final String[] args) {
-        new App().run("records.csv", "records.xml");
+        new App().run("records.csv",
+                "records.xml");
     }
 
     protected void run(final String... paths) {
@@ -27,12 +30,22 @@ public final class App {
         String ext = pathName.substring(pathName.indexOf('.') + 1);
         InputStream stream = this.getClass().getClassLoader()
                 .getResourceAsStream(pathName);
-        if ("csv".equals(ext)) {
-            CsvFileProcessor processor = new CsvFileProcessor(this.printStream);
-            processor.process(pathName, stream);
-        } else {
+        FileProcessor processor = buildProcessor(ext);
+        if (processor == null) {
             this.printStream.println(pathName
                     + " not processed: extension unsupported");
+        } else {
+            processor.process(stream);
+        }
+    }
+
+    protected FileProcessor buildProcessor(final String ext) {
+        if ("csv".equals(ext)) {
+            return new CsvFileProcessor(this.printStream);
+        } else if ("xml".equals(ext)) {
+            return new XmlFileProcessor(this.printStream);
+        } else {
+            return null;
         }
     }
 }

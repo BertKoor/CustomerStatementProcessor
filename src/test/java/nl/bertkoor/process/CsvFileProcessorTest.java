@@ -47,6 +47,6 @@ public class CsvFileProcessorTest extends TestWithPrintStreamInterception {
     private void letSutProcess(final String fileName) {
         InputStream stream = this.getClass().getClassLoader()
                 .getResourceAsStream(fileName);
-        sut.process(fileName, stream);
+        sut.process(stream);
     }
 }
