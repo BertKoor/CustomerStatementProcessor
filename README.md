@@ -17,12 +17,13 @@ Implementation by Bert Koorengevel - Java Sortware Engineer / CodeSmith @ Ordina
 
  * This is a totally self-contained project, packaged as a runnable jar,
    designed to be scaleable and thus is efficient with memory.
+ * The core of this application is validation.
+   To perform validation I have used annotation-driven bean validation.
  * SpringBoot and CDI (dependency injection) are not used to reduce the jar size
    and because the project is not that complex.
  * Project Lombok is extensively used in the `model` package,
    for instance to generate getters, builders and constructors.
- * The core of this application is validation.
-   To perform validation I have used annotation-driven bean validation.
+ * For CSV parsing no external libraries are used, I rolled my own.
 
 ## Code Quality
 
@@ -35,7 +36,9 @@ mvn clean package site
 and open `target\site\project-reports.html` in your browser.
 
  * No serious issues should be reported by the CheckStyle, FindBugs or PMD plugins.
+   All these plugins use the standard rules, with some exceptions (e.g. no JavaDoc required)
  * The unit test coverage should be above 90%.
+ * Note that the PDM report is absent when the PDM plugin finds no issues.
 
 ## Outline of classes
 
@@ -57,5 +60,6 @@ and open `target\site\project-reports.html` in your browser.
    `App.java`. I have tried to read the resources folder and iterate through it like
    it were a folder, but inside a jar that gave some tough technicul difficulties.
    (`getResource("/")` returns `null`)
- * Unit test coverage of 
+ * For the class `App.java` an integration test is runned, but without asserts.
+   No mocking framework is used yet to assert deep-nested behaviour.
    

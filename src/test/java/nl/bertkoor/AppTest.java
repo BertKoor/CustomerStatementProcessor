@@ -14,4 +14,9 @@ public class AppTest {
     public void testUnknownExtension() {
         sut.process("records.foo");
     }
+
+    @Test
+    public void integrationTest() {
+        App.main(null);
+    }
 }
