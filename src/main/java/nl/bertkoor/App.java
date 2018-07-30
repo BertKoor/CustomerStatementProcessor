@@ -1,6 +1,7 @@
 package nl.bertkoor;
 
 import nl.bertkoor.process.CsvFileProcessor;
+import nl.bertkoor.process.ReportWriter;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -35,7 +36,6 @@ public class App {
         if ("csv".equals(ext)) {
             CsvFileProcessor processor = new CsvFileProcessor(filePath);
             processor.process();
-            processor.report();
         }
     }
 }
