@@ -16,12 +16,13 @@ public final class StatementError {
      * Create a StatementError for a statement with its error message.
      * The needed attributes for the report are copied, this frees some memory.
      * @param statement
-     * @param errorMessage
+     * @param errMsg
      */
-    public StatementError(final CustomerStatement statement, final String errorMessage) {
+    public StatementError(final CustomerStatement statement,
+                          final String errMsg) {
         this.referenceNumber = statement.getReferenceNumber();
         this.statementDescription = statement.getDescription();
-        this.errorMessage = errorMessage;
+        this.errorMessage = errMsg;
     }
 
 }

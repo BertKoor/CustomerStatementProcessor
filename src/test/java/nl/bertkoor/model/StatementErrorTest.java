@@ -2,6 +2,7 @@ package nl.bertkoor.model;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StatementErrorTest {
@@ -23,6 +24,13 @@ public class StatementErrorTest {
         assertThat(sut.getReferenceNumber()).isEqualTo("refNr");
         assertThat(sut.getStatementDescription()).isEqualTo("descr");
         assertThat(sut.getErrorMessage()).isEqualTo("errMsg");
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(new StatementError(CustomerStatement.builder().build(),
+                null).toString()).contains("=null, ");
+
     }
 
 }

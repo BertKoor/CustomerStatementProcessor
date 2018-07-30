@@ -1,5 +1,6 @@
 package nl.bertkoor.process;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.bertkoor.model.CustomerStatement;
 
 import java.io.BufferedReader;
@@ -9,7 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class CsvFileProcessor {
+@SuppressFBWarnings(value = {"NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"})
+public final class CsvFileProcessor {
 
     private ReportWriter reportWriter;
 
@@ -23,7 +25,8 @@ public class CsvFileProcessor {
 
     public void processFile(final Path filePath) {
         this.reportWriter.startReport(filePath.getFileName().toString());
-        try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.ISO_8859_1)) {
+        try (BufferedReader reader = Files.newBufferedReader(filePath,
+                StandardCharsets.ISO_8859_1)) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 this.processRecord(line);
@@ -36,10 +39,11 @@ public class CsvFileProcessor {
     }
 
     protected void processRecord(final String recordLine) {
-        this.recordCount++;
         CustomerStatement statement = this.parser.parse(recordLine);
         if (statement != null) {
-            this.reportWriter.reportStatementViolations(this.validator.validate(statement));
+            this.recordCount++;
+            this.reportWriter.printViolations(
+                    this.validator.validate(statement));
         }
 
     }

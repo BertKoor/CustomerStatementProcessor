@@ -5,7 +5,10 @@ import nl.bertkoor.model.StatementError;
 import java.io.PrintStream;
 import java.util.Collection;
 
-public class ReportWriter {
+public final class ReportWriter {
+
+    private static final int REFNR_COLUMN_WIDTH = 6;
+    private static final int DESCR_COLUMN_WIDTH = 30;
 
     private PrintStream outputStream;
     private boolean headerPrinted = false;
@@ -19,7 +22,7 @@ public class ReportWriter {
         printLine("Processing " + fileName);
     }
 
-    public void reportStatementViolations (final Collection<StatementError> violations) {
+    public void printViolations(final Collection<StatementError> violations) {
         if (!violations.isEmpty()) {
             this.printHeader();
             for (StatementError error: violations) {
@@ -45,7 +48,8 @@ public class ReportWriter {
     public void endReport(final int statementCount) {
         printLine("");
         printLine(statementCount + " statements processed.");
-        printLine(((violationCount == 0) ? "No" : violationCount) + " violations found.");
+        String counts = (violationCount == 0) ? "No" : "" + violationCount;
+        printLine(counts + " violations found.");
     }
 
 
@@ -54,18 +58,22 @@ public class ReportWriter {
     }
 
     protected static String renderLine(final StatementError error) {
-        return renderLine(error.getReferenceNumber(), error.getStatementDescription(), error.getErrorMessage());
+        return renderLine(error.getReferenceNumber(),
+                error.getStatementDescription(),
+                error.getErrorMessage());
     }
 
-    protected static String renderLine(final String refNr, final String statementDescr, final String validationError) {
-        return align(refNr, 6) + "   " +
-                align(statementDescr, 30) + "   " +
-                validationError;
+    protected static String renderLine(final String refNr,
+                                       final String statementDescr,
+                                       final String validationError) {
+        return align(refNr, REFNR_COLUMN_WIDTH) + "   "
+                + align(statementDescr, DESCR_COLUMN_WIDTH) + "   "
+                + validationError;
     }
 
     protected static String align(final String value, final int length) {
         StringBuffer result = new StringBuffer();
-        int copyLen = (value.length() < length) ? value.length() : length;
+        int copyLen = value.length() < length ? value.length() : length;
         result.append(value.substring(0, copyLen));
         while (result.length() < length) {
             result.append(' ');

@@ -10,9 +10,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-@Builder @Getter @EqualsAndHashCode @ToString
+/**
+ * This represents a customer statement.
+ * Its properties can be validated with basic bean validation.
+ * Also the balance is validated by implementing BalancedStatement.
+ */
+@Builder @Getter
+@EqualsAndHashCode @ToString // convenience for unit tests
 public final class CustomerStatement implements BalancedStatement {
-
     @NotBlank private final String referenceNumber;
     @NotBlank private final String accountNumber;
     @NotBlank private final String description;

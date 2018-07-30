@@ -4,25 +4,31 @@ import nl.bertkoor.model.CustomerStatement;
 
 import java.math.BigDecimal;
 
-public class CsvLineParser {
+public final class CsvLineParser {
+
+    private static final int CVS_COLUMN_COUNT = 6;
 
     public CustomerStatement parse(final String line) {
         String[] columns = line.split(",");
-        if (columns.length != 6) {
-            throw new IllegalArgumentException("CSV line should contain 6 elements");
+        if (columns.length != CVS_COLUMN_COUNT) {
+            throw new IllegalArgumentException("CSV line should contain "
+                    + CVS_COLUMN_COUNT + " elements");
         }
-        return ("Reference".equals(columns[0])) ? null :
-                CustomerStatement.builder()
-                        .referenceNumber(columns[0])
-                        .accountNumber(columns[1])
-                        .description(columns[2])
-                        .startBalance(this.parseBigDec(columns[3]))
-                        .mutation(this.parseBigDec(columns[4]))
-                        .endBalance(this.parseBigDec(columns[5]))
-                        .build();
+        if ("Reference".equals(columns[0])) {
+            return null;
+        }
+        int c = 0;
+        return CustomerStatement.builder()
+                .referenceNumber(columns[c++])
+                .accountNumber(columns[c++])
+                .description(columns[c++])
+                .startBalance(this.parseBigDec(columns[c++]))
+                .mutation(this.parseBigDec(columns[c++]))
+                .endBalance(this.parseBigDec(columns[c++]))
+                .build();
     }
 
-    protected BigDecimal parseBigDec(String value) {
+    protected BigDecimal parseBigDec(final String value) {
         return new BigDecimal(value).setScale(2);
     }
 }

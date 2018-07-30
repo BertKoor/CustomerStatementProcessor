@@ -1,38 +1,36 @@
 package nl.bertkoor;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
+import java.io.File;
+import java.io.FilenameFilter;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class AppTest {
+    private App sut = new App();
+
+    @Test(expected = NullPointerException.class)
+    public void testNonexistingPath() {
+        sut.run("0:does/not/exists");
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    @Test
+    public void testFilenameFilter() {
+        FilenameFilter filter = sut.buildFilenameFilter();
+        assertThat(filter.accept(new File("/"), "record.foo"))
+                .isFalse();
+        assertThat(filter.accept(new File("/"), "records.foo"))
+                .isTrue();
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test(expected = RuntimeException.class)
+    public void testCsvFile() {
+        sut.process(new File("/doesNotExist.csv").toPath());
+    }
+
+    @Test
+    public void testUnknownExtension() {
+        sut.process(new File("/records.foo").toPath());
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for the CustomerStatement.
@@ -18,6 +19,12 @@ public class CustomerStatementTest extends AbstractStatementTest {
         EqualsVerifier
                 .forClass(CustomerStatement.class)
                 .verify();
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(CustomerStatement.builder().build().toString())
+                .contains("=null, ");
     }
 
     // Extensive tests on @NotBlank annotation on one field: referenceNumber
